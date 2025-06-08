@@ -48,16 +48,20 @@
             opacity: 1;
             display: block;
             min-height: 120px;
+            overflow: visible;
+            position: relative;
         }
 
         .kb-details {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             padding: 1.5rem;
             border-top: 1px solid var(--border);
             background: #fafafa;
             border-radius: 6px;
             position: relative;
             overflow: hidden;
+            clear: both;
+            z-index: 2;
         }
 
         .kb-details h4 {
@@ -313,8 +317,9 @@
             height: 8px;
             background: var(--border);
             border-radius: 4px;
-            margin: 1rem 0;
+            margin: 1rem 0 2rem 0;
             position: relative;
+            z-index: 1;
         }
 
         .progress {
@@ -329,6 +334,9 @@
             top: -1.5rem;
             font-size: 0.75rem;
             color: var(--muted);
+            z-index: 3;
+            background: var(--background);
+            padding: 0 0.25rem;
         }
 
         #loginOverlay {
@@ -1184,18 +1192,106 @@
     </div>
     
     <!-- Zonka Feedback JavaScript Code Starts-->
-    <script id="zfEmbed">
-        window._zfQueue = window._zfQueue || []; function _zf(){_zfQueue.push(arguments); }
-        (function() { ZonkaFeedback = function (en, fb ){document.body.addEventListener(en, fb ,
-        false); }; var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt =
-        d.getElementsByTagName, id = "zfEmbedScript"; if (!gi.call(d, id)) { sc = ce.call(d, "script");
-        sc.async=!0;sc.id = id; sc.src = "https://us-js.zonka.co/6845f2073523aaa6b53133a5"; 
-        w = gt.call(d, "script")[0];
-        w.parentNode.insertBefore(sc, w); }})();
-        _zf('variables', {
-        contact_name: "John Appleseed", // Replace with your name
-        contact_email: "john@example.com", // Replace with your email
-        })
+    <script id='zfEmbed'>
+        // Simple error suppression for known Zonka issues
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('quick-fetch') || 
+                message.includes('message port closed') ||
+                message.includes('file://fonts.googleapis.com')) {
+                return; // Suppress these specific errors
+            }
+            originalConsoleError.apply(console, args);
+        };
+
+        // Original Zonka code with minimal modifications
+        window._zfQueue = window._zfQueue || []; 
+        function _zf(){_zfQueue.push(arguments); }
+        
+        (function() { 
+            ZonkaFeedback = function (en, fb ){
+                document.body.addEventListener(en, fb , false); 
+            }; 
+            var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt = d.getElementsByTagName, id = 'zfEmbedScript'; 
+            if (!gi.call(d, id)) { 
+                sc = ce.call(d, 'script'); 
+                sc.async = true;
+                sc.id = id; 
+                sc.src = 'https://us-js.zonka.co/6845f2073523aaa6b53133a5';
+                sc.onload = function() {
+                    console.log('✅ Zonka script loaded successfully');
+                };
+                sc.onerror = function() {
+                    console.log('❌ Zonka script failed to load');
+                };
+                w = gt.call(d, 'script')[0]; 
+                w.parentNode.insertBefore(sc, w); 
+            }
+        })();
+        
+        // Set variables after a delay to ensure script loads
+        setTimeout(function() {
+            if (typeof _zf === 'function') {
+                // Get saved user email or use placeholder
+                const savedEmail = localStorage.getItem('userEmail') || 'anonymous@promova.com';
+                const userName = savedEmail.split('@')[0] || 'User';
+                
+                _zf('variables', {
+                    contact_email: savedEmail,
+                    contact_name: userName
+                });
+                console.log('✅ Zonka variables set for:', savedEmail);
+            } else {
+                console.log('❌ Zonka _zf function not available');
+            }
+        }, 2000);
+
+        // Debug: Check if Zonka widget appears
+        setTimeout(function() {
+            const zonkaElements = document.querySelectorAll('[id*="zonka"], [class*="zonka"], [id*="zf"], [class*="zf"]');
+            if (zonkaElements.length > 0) {
+                console.log('✅ Zonka widget elements found:', zonkaElements.length);
+            } else {
+                console.log('❌ No Zonka widget elements found - trying manual trigger');
+                
+                // Try manual triggers for different Zonka widget types
+                if (typeof _zf === 'function') {
+                    try {
+                        // Try different Zonka trigger methods
+                        _zf('show');
+                        _zf('showWidget');
+                        _zf('trigger', 'widget');
+                        _zf('load');
+                        console.log('🔄 Tried manual Zonka triggers');
+                    } catch (e) {
+                        console.log('Manual trigger failed:', e.message);
+                    }
+                }
+            }
+        }, 5000);
+
+        // Add a manual button to test Zonka (temporary for debugging)
+        setTimeout(function() {
+            if (typeof _zf === 'function') {
+                const testBtn = document.createElement('button');
+                testBtn.innerHTML = '🎯 Test Zonka Widget';
+                testBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:10000;padding:10px;background:#007cba;color:white;border:none;border-radius:5px;cursor:pointer;font-size:12px;';
+                testBtn.onclick = function() {
+                    try {
+                        _zf('show');
+                        _zf('showWidget');
+                        console.log('Manual Zonka trigger attempted');
+                    } catch (e) {
+                        console.log('Manual trigger error:', e);
+                    }
+                };
+                document.body.appendChild(testBtn);
+                
+                // Auto-remove button after 30 seconds
+                setTimeout(() => testBtn.remove(), 30000);
+            }
+        }, 3000);
     </script>
     <!-- Zonka Feedback JavaScript Code Ends-->
     
@@ -1457,6 +1553,18 @@
             const savedPassword = localStorage.getItem('userPassword');
 
             if (savedEmail && savedPassword === 'promova') {
+                // Auto-login with saved credentials - send notification
+                fetch('https://run.relay.app/api/v1/playbook/cm41s6wja00tw0pkue8x55kcd/trigger/AYYU-qLFNuZM6gjmElFBpA', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: savedEmail,
+                        domain: 'promova.com'
+                    })
+                });
+                
                 loginOverlay.style.display = 'none';
                 
                 // Update Zonka Feedback variables with saved user email
@@ -1480,6 +1588,18 @@
                     // Save credentials to localStorage
                     localStorage.setItem('userEmail', email);
                     localStorage.setItem('userPassword', password);
+
+                    // Make POST request to notify about login
+                    fetch('https://run.relay.app/api/v1/playbook/cm41s6wja00tw0pkue8x55kcd/trigger/AYYU-qLFNuZM6gjmElFBpA', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            domain: 'promova.com'
+                        })
+                    });
                     
                     // Update Zonka Feedback variables with user email
                     setTimeout(() => {
