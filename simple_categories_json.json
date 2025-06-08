@@ -1,0 +1,81 @@
+{
+  "consolidated_categories": [
+    {
+      "rank": 1,
+      "category_ru": "Отмена подписки",
+      "category_en": "Subscription Cancellation",
+      "count": 13754,
+      "percentage": 40.3
+    },
+    {
+      "rank": 2,
+      "category_ru": "Запросы возврата",
+      "category_en": "Refund Requests", 
+      "count": 6092,
+      "percentage": 17.9
+    },
+    {
+      "rank": 3,
+      "category_ru": "Неясные/Прочие",
+      "category_en": "Other/Unclear",
+      "count": 3833,
+      "percentage": 11.2
+    },
+    {
+      "rank": 4,
+      "category_ru": "Проблемы с оплатой",
+      "category_en": "Payment & Billing Issues",
+      "count": 2288,
+      "percentage": 6.7
+    },
+    {
+      "rank": 5,
+      "category_ru": "Авторизация и доступ", 
+      "category_en": "Authorization & Access",
+      "count": 1989,
+      "percentage": 5.8
+    },
+    {
+      "rank": 6,
+      "category_ru": "Управление аккаунтом",
+      "category_en": "Account Management",
+      "count": 1884,
+      "percentage": 5.5
+    },
+    {
+      "rank": 7,
+      "category_ru": "Поддержка курсов и обучения",
+      "category_en": "Course & Learning Support", 
+      "count": 1647,
+      "percentage": 4.8
+    },
+    {
+      "rank": 8,
+      "category_ru": "Положительные отзывы",
+      "category_en": "Positive Feedback",
+      "count": 710,
+      "percentage": 2.1
+    },
+    {
+      "rank": 9,
+      "category_ru": "Проблемы с пробным периодом",
+      "category_en": "Trial & Subscription Issues",
+      "count": 528, 
+      "percentage": 1.5
+    },
+    {
+      "rank": 10,
+      "category_ru": "Проблемы с приложением",
+      "category_en": "App Issues",
+      "count": 514,
+      "percentage": 1.5
+    }
+  ],
+  "summary": {
+    "total_tickets": 34118,
+    "original_categories": 6741,
+    "consolidated_categories": 15,
+    "reduction_percentage": 99.8,
+    "top_10_coverage": 90.4
+  }
+}

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promova Support Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+          :root {
+            --background: #ffffff;
+            --foreground: #111111;
+            --muted: #666666;
+            --border: #eaeaea;
+            --accent: #000000;
+            --hover: #fafafa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            margin: 0;
+        }
+
+        #supportBubbleChart {
+            width: 100%;
+            height: 600px;
+            background: var(--background);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #supportBubbleChart canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .glass-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .glass-card:hover {
+            background: var(--hover);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--foreground);
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            color: var(--foreground);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--foreground);
+        }
+
+        .stat-description {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .trend-indicator {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        .insights-section {
+            margin-top: 3rem;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .time-range {
+            font-size: 0.875rem;
+            color: var(--muted);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .header-content {
+            max-width: 800px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .quick-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .priority-high {
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .stat-breakdown {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .insight-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .insight-filters button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--background);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .insight-filters button.active {
+            background: var(--foreground);
+            color: var(--background);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .trend-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .trend-badge.high {
+            background: #FFE8E8;
+            color: #FF6B6B;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background: #FF6B6B;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            position: absolute;
+            right: 0;
+            top: -1.5rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--foreground);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        #loginForm {
+            width: 100%;
+        }
+
+        #loginForm button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #loginForm button:hover {
+            background: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .insight-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+    <div id="loginOverlay">
+        <div class="login-modal">
+            <div class="login-header">
+                <img src="https://promova.com/logo.svg" alt="Promova logo" style="height: 24px;" onerror="this.style.display='none'">
+                <h2>Welcome to Promova Support Intelligence</h2>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <nav class="nav">
+            <div class="logo">
+                <span class="logo-icon">🌐</span>
+                Promova Support Intelligence
+            </div>
+            <div class="nav-right">
+                <div class="time-range">All Time</div>
+                <a href="https://promova.com">
+                    <img src="https://promova.com/logo.svg" alt="Promova logo" style="height: 20px; opacity: 0.6;" onerror="this.style.display='none'">
+                </a>
+            </div>
+        </nav>
+
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">Promova Support Dashboard</h1>
+                <p class="subtitle">
+                    AI-powered analysis of support interactions for Promova. Identifying patterns 
+                    and automating solutions for language learning platform operations.
+                </p>
+                <div class="header-stats">
+                    <div class="quick-stat">
+                        <span class="stat-number">Intercom</span>
+                        <span class="stat-label">Ticketing System</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-number">34,118</span>
+                        <span class="stat-label">Total Tickets Analyzed</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-number">6,741</span>
+                        <span class="stat-label">Original Categories</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Consolidated Categories</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="supportBubbleChart"></div>
+
+        <div class="stats-grid">
+            <!-- Subscription Cancellation -->
+            <div class="glass-card priority-high">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Subscription Cancellation</div>
+                        <div class="stat-value">13,754 Cases</div>
+                    </div>
+                    <div class="trend-badge high">Highest Impact</div>
+                </div>
+                <div class="stat-description">Users requesting to cancel their language learning subscriptions</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 40.3%"></div>
+                    <span class="progress-text">40.3% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Refund Requests -->
+            <div class="glass-card priority-high">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Refund Requests</div>
+                        <div class="stat-value">6,092 Cases</div>
+                    </div>
+                    <div class="trend-badge high">High Impact</div>
+                </div>
+                <div class="stat-description">Requests for refunds on subscription charges and payments</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 17.9%"></div>
+                    <span class="progress-text">17.9% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Other/Unclear -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Other/Unclear</div>
+                        <div class="stat-value">3,833 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Unclear requests and miscellaneous inquiries</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 11.2%"></div>
+                    <span class="progress-text">11.2% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Payment & Billing Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Payment & Billing Issues</div>
+                        <div class="stat-value">2,288 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Payment processing and billing-related problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 6.7%"></div>
+                    <span class="progress-text">6.7% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Authorization & Access -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Authorization & Access</div>
+                        <div class="stat-value">1,989 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Login issues and account access problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 5.8%"></div>
+                    <span class="progress-text">5.8% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Account Management -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Account Management</div>
+                        <div class="stat-value">1,884 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Account settings, profile updates, and management issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 5.5%"></div>
+                    <span class="progress-text">5.5% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Course & Learning Support -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Course & Learning Support</div>
+                        <div class="stat-value">1,647 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Course access, learning materials, and educational support</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 4.8%"></div>
+                    <span class="progress-text">4.8% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Positive Feedback -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Positive Feedback</div>
+                        <div class="stat-value">710 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Positive reviews, compliments, and appreciation messages</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 2.1%"></div>
+                    <span class="progress-text">2.1% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Trial & Subscription Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Trial & Subscription Issues</div>
+                        <div class="stat-value">528 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Free trial periods and subscription management problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 1.5%"></div>
+                    <span class="progress-text">1.5% of total volume</span>
+                </div>
+            </div>
+
+            <!-- App Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">App Issues</div>
+                        <div class="stat-value">514 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Mobile app functionality and technical issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 1.5%"></div>
+                    <span class="progress-text">1.5% of total volume</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const data = [
+            { name: "Subscription Cancellation", count: 13754, percentage: 40.3 },
+            { name: "Refund Requests", count: 6092, percentage: 17.9 },
+            { name: "Other/Unclear", count: 3833, percentage: 11.2 },
+            { name: "Payment & Billing Issues", count: 2288, percentage: 6.7 },
+            { name: "Authorization & Access", count: 1989, percentage: 5.8 },
+            { name: "Account Management", count: 1884, percentage: 5.5 },
+            { name: "Course & Learning Support", count: 1647, percentage: 4.8 },
+            { name: "Positive Feedback", count: 710, percentage: 2.1 },
+            { name: "Trial & Subscription Issues", count: 528, percentage: 1.5 },
+            { name: "App Issues", count: 514, percentage: 1.5 }
+        ];
+        const container = document.getElementById('supportBubbleChart');
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        const Engine = Matter.Engine,
+              Render = Matter.Render,
+              Runner = Matter.Runner,
+              Bodies = Matter.Bodies,
+              Composite = Matter.Composite,
+              Mouse = Matter.Mouse,
+              Body = Matter.Body,
+              MouseConstraint = Matter.MouseConstraint;
+
+        const engine = Engine.create({
+            constraintIterations: 3
+        });
+
+        engine.timing.timeScale = 0.7;
+
+        const render = Render.create({
+            element: container,
+            engine: engine,
+            options: {
+                width: containerWidth,
+                height: containerHeight,
+                wireframes: false,
+                background: 'transparent',
+                pixelRatio: window.devicePixelRatio
+            }
+        });
+
+        const maxCount = Math.max(...data.map(d => d.count));
+        const minRadius = 40;
+        const maxRadius = 120;
+        const radiusScale = count => (count / maxCount) * (maxRadius - minRadius) + minRadius;
+
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
+            '#FFEEAD', '#D4A5A5', '#9B89B3', '#FFB6B9',
+            '#A8E6CF', '#DCEDC1'
+        ];
+
+        const generateColor = (index) => {
+            return colors[index % colors.length];
+        };
+
+        const wallThickness = 50;
+        const wallOptions = {
+            isStatic: true,
+            render: { fillStyle: 'transparent' },
+            restitution: 0.3
+        };
+
+        const walls = [
+            Bodies.rectangle(containerWidth/2, -wallThickness/2, containerWidth + 100, wallThickness, wallOptions),
+            Bodies.rectangle(containerWidth/2, containerHeight + wallThickness/2, containerWidth + 100, wallThickness, wallOptions),
+            Bodies.rectangle(-wallThickness/2, containerHeight/2, wallThickness, containerHeight + 100, wallOptions),
+            Bodies.rectangle(containerWidth + wallThickness/2, containerHeight/2, wallThickness, containerHeight + 100, wallOptions)
+        ];
+
+        const bubbles = data.map((item, index) => {
+            const radius = radiusScale(item.count);
+            return Bodies.circle(
+                containerWidth / 2 + (Math.random() - 0.5) * 100,
+                containerHeight / 2 + (Math.random() - 0.5) * 100,
+                radius,
+                {
+                    restitution: 0.5,
+                    friction: 0.2,
+                    density: 0.0008,
+                    frictionAir: 0.03,
+                    render: {
+                        fillStyle: colors[index],
+                        strokeStyle: '#ffffff',
+                        lineWidth: 2
+                    }
+                }
+            );
+        });
+
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.1,
+                damping: 0.2,
+                render: { visible: false }
+            }
+        });
+
+        Matter.Events.on(engine, 'afterUpdate', () => {
+            bubbles.forEach(bubble => {
+                const maxVelocity = 15;
+                const velocity = bubble.velocity;
+                const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+                
+                if (speed > maxVelocity) {
+                    const scale = maxVelocity / speed;
+                    Body.setVelocity(bubble, {
+                        x: velocity.x * scale,
+                        y: velocity.y * scale
+                    });
+                }
+            });
+        });
+
+        Composite.add(engine.world, [...bubbles, ...walls, mouseConstraint]);
+        engine.world.gravity.y = 0;
+
+        Matter.Events.on(engine, 'beforeUpdate', () => {
+            bubbles.forEach(bubble => {
+                const centerAttraction = {
+                    x: (containerWidth/2 - bubble.position.x) * 0.00002,
+                    y: (containerHeight/2 - bubble.position.y) * 0.00002
+                };
+                
+                Matter.Body.applyForce(bubble, bubble.position, centerAttraction);
+            });
+        });
+
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        const canvas = render.canvas;
+        const ctx = canvas.getContext('2d');
+
+        Matter.Events.on(render, 'afterRender', () => {
+            bubbles.forEach((bubble, index) => {
+                const lines = data[index].name.split(' ');
+                const lineHeight = 14;
+                const startY = bubble.position.y - (lines.length - 1) * lineHeight / 2;
+                
+                ctx.font = '400 11px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#ffffff';
+                
+                lines.forEach((line, lineIndex) => {
+                    ctx.fillText(line, bubble.position.x, startY + lineIndex * lineHeight - 5);
+                });
+                
+                ctx.font = '600 13px Inter';
+                ctx.fillText(
+                    `${data[index].percentage}%`,
+                    bubble.position.x,
+                    bubble.position.y + lines.length * lineHeight / 2 + 5
+                );
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginOverlay = document.getElementById('loginOverlay');
+            const loginForm = document.getElementById('loginForm');
+
+            // Check if we have saved credentials
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedPassword = localStorage.getItem('userPassword');
+
+            if (savedEmail && savedPassword === 'promova') {
+                loginOverlay.style.display = 'none';
+            }
+
+            loginForm.onsubmit = (event) => {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // Check if password matches
+                if (password === 'promova') {
+                    // Save credentials to localStorage
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPassword', password);
+                    
+                    // Hide overlay after a short delay
+                    setTimeout(() => {
+                        loginOverlay.style.display = 'none';
+                    }, 500);
+                } else {
+                    alert('Invalid password');
+                }
+            };
+        });
+    </script>
+</body>
+</html>
