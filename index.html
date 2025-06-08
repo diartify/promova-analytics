@@ -44,6 +44,10 @@
             border-radius: 8px;
             padding: 1.5rem;
             transition: all 0.2s ease;
+            visibility: visible;
+            opacity: 1;
+            display: block;
+            min-height: 120px;
         }
 
         .glass-card:hover {
@@ -93,6 +97,10 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             margin-top: 3rem;
+            visibility: visible;
+            opacity: 1;
+            z-index: 1;
+            position: relative;
         }
 
         @media (max-width: 768px) {
@@ -689,21 +697,6 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <!-- Zonka Feedback JavaScript Code Starts-->
-    <script id="zfEmbed">
-        window._zfQueue = window._zfQueue || []; function _zf(){_zfQueue.push(arguments); }
-        (function() { ZonkaFeedback = function (en, fb ){document.body.addEventListener(en, fb ,
-        false); }; var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt =
-        d.getElementsByTagName, id = "zfEmbedScript"; if (!gi.call(d, id)) { sc = ce.call(d, "script");
-        sc.async=!0;sc.id = id; sc.src = "https://us-js.zonka.co/6845f2073523aaa6b53133a5"; 
-        w = gt.call(d, "script")[0];
-        w.parentNode.insertBefore(sc, w); }})();
-        _zf('variables', {
-            contact_name: "john@example.com", // Will be replaced with user email
-            contact_email: "john@example.com", // Will be replaced with user email
-        }) 
-    </script>
-    <!-- Zonka Feedback JavaScript Code Ends-->
 </head>
 <body>
     <div id="loginOverlay">
@@ -1181,6 +1174,23 @@
             </div>
         </div>
     </div>
+    
+    <!-- Zonka Feedback JavaScript Code Starts-->
+    <script id="zfEmbed">
+        window._zfQueue = window._zfQueue || []; function _zf(){_zfQueue.push(arguments); }
+        (function() { ZonkaFeedback = function (en, fb ){document.body.addEventListener(en, fb ,
+        false); }; var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt =
+        d.getElementsByTagName, id = "zfEmbedScript"; if (!gi.call(d, id)) { sc = ce.call(d, "script");
+        sc.async=!0;sc.id = id; sc.src = "https://us-js.zonka.co/6845f2073523aaa6b53133a5"; 
+        w = gt.call(d, "script")[0];
+        w.parentNode.insertBefore(sc, w); }})();
+        _zf('variables', {
+        contact_name: "John Appleseed", // Replace with your name
+        contact_email: "john@example.com", // Replace with your email
+        })
+    </script>
+    <!-- Zonka Feedback JavaScript Code Ends-->
+    
     <script>
         const data = [
             // Main Categories
@@ -1445,12 +1455,14 @@
                 loginOverlay.style.display = 'none';
                 
                 // Update Zonka Feedback variables with saved user email
-                if (typeof _zf === 'function') {
-                    _zf('variables', {
-                        contact_name: savedEmail,
-                        contact_email: savedEmail,
-                    });
-                }
+                setTimeout(() => {
+                    if (typeof _zf === 'function') {
+                        _zf('variables', {
+                            contact_name: savedEmail,
+                            contact_email: savedEmail,
+                        });
+                    }
+                }, 1000);
             }
 
             loginForm.onsubmit = (event) => {
@@ -1465,12 +1477,14 @@
                     localStorage.setItem('userPassword', password);
                     
                     // Update Zonka Feedback variables with user email
-                    if (typeof _zf === 'function') {
-                        _zf('variables', {
-                            contact_name: email,
-                            contact_email: email,
-                        });
-                    }
+                    setTimeout(() => {
+                        if (typeof _zf === 'function') {
+                            _zf('variables', {
+                                contact_name: email,
+                                contact_email: email,
+                            });
+                        }
+                    }, 1000);
                     
                     // Hide overlay after a short delay
                     setTimeout(() => {
