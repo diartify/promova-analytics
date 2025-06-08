@@ -421,6 +421,142 @@
             background: #333;
         }
 
+        /* Feedback Button Styles */
+        .feedback-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--foreground);
+            color: var(--background);
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            user-select: none;
+        }
+
+        .feedback-button:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Feedback Modal Styles */
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .feedback-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-modal-content {
+            background: var(--background);
+            border-radius: 12px;
+            width: 95%;
+            max-width: 900px;
+            height: 90%;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .feedback-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feedback-modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--muted);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: var(--hover);
+            color: var(--foreground);
+        }
+
+        .feedback-iframe-container {
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .feedback-iframe-container iframe {
+            border-radius: 0 0 12px 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .feedback-modal-content {
+                width: 98%;
+                height: 95%;
+                margin: 10px;
+                max-height: none;
+            }
+            
+            .feedback-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+
         /* Analysis Section Styles */
         .analysis-section {
             margin-top: 4rem;
@@ -1191,109 +1327,32 @@
 
     </div>
     
-    <!-- Zonka Feedback JavaScript Code Starts-->
-    <script id='zfEmbed'>
-        // Simple error suppression for known Zonka issues
-        const originalConsoleError = console.error;
-        console.error = function(...args) {
-            const message = args.join(' ');
-            if (message.includes('quick-fetch') || 
-                message.includes('message port closed') ||
-                message.includes('file://fonts.googleapis.com')) {
-                return; // Suppress these specific errors
-            }
-            originalConsoleError.apply(console, args);
-        };
+    <!-- Custom Feedback Button and Modal -->
+    <div id="feedbackButton" class="feedback-button">
+        💬 Feedback please 👉👈
+    </div>
 
-        // Original Zonka code with minimal modifications
-        window._zfQueue = window._zfQueue || []; 
-        function _zf(){_zfQueue.push(arguments); }
-        
-        (function() { 
-            ZonkaFeedback = function (en, fb ){
-                document.body.addEventListener(en, fb , false); 
-            }; 
-            var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt = d.getElementsByTagName, id = 'zfEmbedScript'; 
-            if (!gi.call(d, id)) { 
-                sc = ce.call(d, 'script'); 
-                sc.async = true;
-                sc.id = id; 
-                sc.src = 'https://us-js.zonka.co/6845f2073523aaa6b53133a5';
-                sc.onload = function() {
-                    console.log('✅ Zonka script loaded successfully');
-                };
-                sc.onerror = function() {
-                    console.log('❌ Zonka script failed to load');
-                };
-                w = gt.call(d, 'script')[0]; 
-                w.parentNode.insertBefore(sc, w); 
-            }
-        })();
-        
-        // Set variables after a delay to ensure script loads
-        setTimeout(function() {
-            if (typeof _zf === 'function') {
-                // Get saved user email or use placeholder
-                const savedEmail = localStorage.getItem('userEmail') || 'anonymous@promova.com';
-                const userName = savedEmail.split('@')[0] || 'User';
-                
-                _zf('variables', {
-                    contact_email: savedEmail,
-                    contact_name: userName
-                });
-                console.log('✅ Zonka variables set for:', savedEmail);
-            } else {
-                console.log('❌ Zonka _zf function not available');
-            }
-        }, 2000);
-
-        // Debug: Check if Zonka widget appears
-        setTimeout(function() {
-            const zonkaElements = document.querySelectorAll('[id*="zonka"], [class*="zonka"], [id*="zf"], [class*="zf"]');
-            if (zonkaElements.length > 0) {
-                console.log('✅ Zonka widget elements found:', zonkaElements.length);
-            } else {
-                console.log('❌ No Zonka widget elements found - trying manual trigger');
-                
-                // Try manual triggers for different Zonka widget types
-                if (typeof _zf === 'function') {
-                    try {
-                        // Try different Zonka trigger methods
-                        _zf('show');
-                        _zf('showWidget');
-                        _zf('trigger', 'widget');
-                        _zf('load');
-                        console.log('🔄 Tried manual Zonka triggers');
-                    } catch (e) {
-                        console.log('Manual trigger failed:', e.message);
-                    }
-                }
-            }
-        }, 5000);
-
-        // Add a manual button to test Zonka (temporary for debugging)
-        setTimeout(function() {
-            if (typeof _zf === 'function') {
-                const testBtn = document.createElement('button');
-                testBtn.innerHTML = '🎯 Test Zonka Widget';
-                testBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:10000;padding:10px;background:#007cba;color:white;border:none;border-radius:5px;cursor:pointer;font-size:12px;';
-                testBtn.onclick = function() {
-                    try {
-                        _zf('show');
-                        _zf('showWidget');
-                        console.log('Manual Zonka trigger attempted');
-                    } catch (e) {
-                        console.log('Manual trigger error:', e);
-                    }
-                };
-                document.body.appendChild(testBtn);
-                
-                // Auto-remove button after 30 seconds
-                setTimeout(() => testBtn.remove(), 30000);
-            }
-        }, 3000);
-    </script>
-    <!-- Zonka Feedback JavaScript Code Ends-->
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal">
+        <div class="feedback-modal-content">
+            <div class="feedback-modal-header">
+                <h3>Share Your Feedback</h3>
+                <button id="closeFeedback" class="close-button">&times;</button>
+            </div>
+            <div class="feedback-iframe-container">
+                <iframe 
+                    id="feedbackIframe"
+                    src="https://us1.zonka.co/pe95WI?zf_embed=1&zf_embedintrooff=1&zf_embedheaderoff=0&zf_embedfooteroff=1&zf_embednavigation=0" 
+                    width="100%" 
+                    height="100%" 
+                    frameborder="0" 
+                    marginheight="0" 
+                    marginwidth="0">
+                    Loading feedback form...
+                </iframe>
+            </div>
+        </div>
+    </div>
     
     <script>
         const data = [
@@ -1632,6 +1691,64 @@
                     card.style.transform = 'translateY(0)';
                     card.style.boxShadow = 'none';
                 });
+            });
+
+            // Feedback Modal Functionality
+            const feedbackButton = document.getElementById('feedbackButton');
+            const feedbackModal = document.getElementById('feedbackModal');
+            const closeFeedback = document.getElementById('closeFeedback');
+
+            // Open feedback modal
+            feedbackButton.addEventListener('click', () => {
+                // Get user email and update iframe src
+                const savedEmail = localStorage.getItem('userEmail') || 'anonymous@promova.com';
+                const userName = savedEmail.split('@')[0] || 'User';
+                const feedbackIframe = document.getElementById('feedbackIframe');
+                
+                // Build Zonka URL with user parameters
+                const baseUrl = 'https://us1.zonka.co/pe95WI';
+                const params = new URLSearchParams({
+                    zf_embed: '1',
+                    zf_embedintrooff: '1',
+                    zf_embedheaderoff: '0',
+                    zf_embedfooteroff: '1',
+                    zf_embednavigation: '0',
+                    contact_email: savedEmail,
+                    contact_name: userName,
+                    email: savedEmail,
+                    name: userName
+                });
+                
+                const fullUrl = `${baseUrl}?${params.toString()}`;
+                feedbackIframe.src = fullUrl;
+                
+                console.log('✅ Feedback modal opened for user:', savedEmail);
+                
+                feedbackModal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+
+            // Close feedback modal
+            function closeFeedbackModal() {
+                feedbackModal.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+
+            // Close modal when clicking the X button
+            closeFeedback.addEventListener('click', closeFeedbackModal);
+
+            // Close modal when clicking outside the content
+            feedbackModal.addEventListener('click', (e) => {
+                if (e.target === feedbackModal) {
+                    closeFeedbackModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && feedbackModal.classList.contains('show')) {
+                    closeFeedbackModal();
+                }
             });
         });
     </script>
