@@ -347,6 +347,312 @@
             background: #333;
         }
 
+        /* Analysis Section Styles */
+        .analysis-section {
+            margin-top: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: var(--foreground);
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--foreground);
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--background);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--foreground);
+            color: var(--background);
+        }
+
+        .deep-dive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .deep-dive-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .deep-dive-card:hover {
+            background: var(--hover);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--foreground);
+            margin: 0;
+        }
+
+        .automation-score {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .sub-patterns {
+            margin-bottom: 1.5rem;
+        }
+
+        .sub-pattern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .pattern-name {
+            font-weight: 500;
+            color: var(--foreground);
+            flex: 1;
+        }
+
+        .pattern-count {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-right: 1rem;
+        }
+
+        .pattern-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .pattern-bar .fill {
+            height: 100%;
+            background: #FF6B6B;
+            transition: width 0.3s ease;
+        }
+
+        .insights {
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .insights p {
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        /* Business Impact Styles */
+        .impact-section {
+            margin: 3rem 0;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .impact-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .impact-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .impact-icon {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+        }
+
+        .impact-header h4 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--foreground);
+            margin: 0;
+        }
+
+        .impact-stats {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .impact-stats .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .impact-stats .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .impact-stats .stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        /* Automation Timeline Styles */
+        .automation-section {
+            margin: 3rem 0;
+        }
+
+        .automation-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--foreground);
+            color: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .timeline-content h4 {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .automation-targets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .target {
+            background: #F5F5F5;
+            color: var(--foreground);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .expected-impact {
+            font-size: 0.875rem;
+            color: #2E7D32;
+            font-weight: 500;
+        }
+
+        /* Trends Section Styles */
+        .trends-section {
+            margin: 3rem 0;
+        }
+
+        .trends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trend-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .trend-card:hover {
+            background: var(--hover);
+        }
+
+        .trend-card h4 {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .trend-card p {
+            margin: 0 0 1rem 0;
+            font-size: 0.875rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .trend-indicator {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .trend-indicator.growing {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .trend-indicator.stable {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
         @media (max-width: 768px) {
             .header-stats {
                 flex-direction: column;
@@ -362,6 +668,23 @@
                 width: 100%;
                 overflow-x: auto;
                 padding-bottom: 0.5rem;
+            }
+
+            .deep-dive-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .automation-timeline {
+                gap: 1rem;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline-marker {
+                align-self: center;
             }
         }
     </style>
@@ -1049,6 +1372,114 @@
                     alert('Invalid password');
                 }
             };
+
+            // Filter functionality for analysis section
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const deepDiveCards = document.querySelectorAll('.deep-dive-card');
+            const impactSection = document.querySelector('.impact-section');
+            const automationSection = document.querySelector('.automation-section');
+            const trendsSection = document.querySelector('.trends-section');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+
+                    // Show/hide sections based on filter
+                    switch(filter) {
+                        case 'all':
+                            deepDiveCards.forEach(card => card.style.display = 'block');
+                            impactSection.style.display = 'block';
+                            automationSection.style.display = 'block';
+                            trendsSection.style.display = 'block';
+                            break;
+                        case 'automation':
+                            deepDiveCards.forEach(card => card.style.display = 'block');
+                            impactSection.style.display = 'none';
+                            automationSection.style.display = 'block';
+                            trendsSection.style.display = 'none';
+                            break;
+                        case 'business':
+                            deepDiveCards.forEach(card => card.style.display = 'block');
+                            impactSection.style.display = 'block';
+                            automationSection.style.display = 'none';
+                            trendsSection.style.display = 'none';
+                            break;
+                        case 'trends':
+                            deepDiveCards.forEach(card => card.style.display = 'none');
+                            impactSection.style.display = 'none';
+                            automationSection.style.display = 'none';
+                            trendsSection.style.display = 'block';
+                            break;
+                    }
+                });
+            });
+
+            // Animate pattern bars on scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const fills = entry.target.querySelectorAll('.pattern-bar .fill');
+                        fills.forEach(fill => {
+                            fill.style.transform = 'scaleX(1)';
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            deepDiveCards.forEach(card => {
+                // Initially scale bars to 0
+                const fills = card.querySelectorAll('.pattern-bar .fill');
+                fills.forEach(fill => {
+                    fill.style.transform = 'scaleX(0)';
+                    fill.style.transformOrigin = 'left';
+                    fill.style.transition = 'transform 0.8s ease-out';
+                });
+                
+                observer.observe(card);
+            });
+
+            // Add hover effects for trend cards
+            const trendCards = document.querySelectorAll('.trend-card');
+            trendCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-4px)';
+                    card.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = 'none';
+                });
+            });
+
+            // Add click tracking for automation timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    console.log(`Clicked on automation phase ${index + 1}`);
+                    // Here you could add more detailed modal or expansion functionality
+                });
+                
+                item.style.cursor = 'pointer';
+                item.addEventListener('mouseenter', () => {
+                    item.style.transform = 'scale(1.02)';
+                    item.style.transition = 'transform 0.2s ease';
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    item.style.transform = 'scale(1)';
+                });
+            });
         });
     </script>
 </body>
