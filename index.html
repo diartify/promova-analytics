@@ -24,7 +24,7 @@
 
         #supportBubbleChart {
             width: 100%;
-            height: 600px;
+            height: 700px;
             background: var(--background);
             border-radius: 12px;
             border: 1px solid var(--border);
@@ -689,6 +689,21 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <!-- Zonka Feedback JavaScript Code Starts-->
+    <script id="zfEmbed">
+        window._zfQueue = window._zfQueue || []; function _zf(){_zfQueue.push(arguments); }
+        (function() { ZonkaFeedback = function (en, fb ){document.body.addEventListener(en, fb ,
+        false); }; var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt =
+        d.getElementsByTagName, id = "zfEmbedScript"; if (!gi.call(d, id)) { sc = ce.call(d, "script");
+        sc.async=!0;sc.id = id; sc.src = "https://us-js.zonka.co/6845f2073523aaa6b53133a5"; 
+        w = gt.call(d, "script")[0];
+        w.parentNode.insertBefore(sc, w); }})();
+        _zf('variables', {
+            contact_name: "john@example.com", // Will be replaced with user email
+            contact_email: "john@example.com", // Will be replaced with user email
+        }) 
+    </script>
+    <!-- Zonka Feedback JavaScript Code Ends-->
 </head>
 <body>
     <div id="loginOverlay">
@@ -710,17 +725,6 @@
             </form>
         </div>
     </div>
-    <!-- Zonka Feedback JavaScript Code Starts-->
-    <script id="zfEmbed">
-        window._zfQueue = window._zfQueue || []; function _zf(){_zfQueue.push(arguments); }
-        (function() { ZonkaFeedback = function (en, fb ){document.body.addEventListener(en, fb ,
-        false); }; var sc, w, d = document, ce = d.createElement, gi = d.getElementById, gt =
-        d.getElementsByTagName, id = "zfEmbedScript"; if (!gi.call(d, id)) { sc = ce.call(d, "script");
-        sc.async=!0;sc.id = id; sc.src = "https://us-js.zonka.co/6845f2073523aaa6b53133a5"; 
-        w = gt.call(d, "script")[0];
-        w.parentNode.insertBefore(sc, w); }})();
-  </script>
-<!-- Zonka Feedback JavaScript Code Ends-->
     <div class="container">
         <nav class="nav">
             <div class="logo">
@@ -1179,16 +1183,56 @@
     </div>
     <script>
         const data = [
-            { name: "Subscription Cancellation", count: 13754, percentage: 40.3 },
-            { name: "Refund Requests", count: 6092, percentage: 17.9 },
-            { name: "Other/Unclear", count: 3833, percentage: 11.2 },
-            { name: "Payment & Billing Issues", count: 2288, percentage: 6.7 },
-            { name: "Authorization & Access", count: 1989, percentage: 5.8 },
-            { name: "Account Management", count: 1884, percentage: 5.5 },
-            { name: "Course & Learning Support", count: 1647, percentage: 4.8 },
-            { name: "Positive Feedback", count: 710, percentage: 2.1 },
-            { name: "Trial & Subscription Issues", count: 528, percentage: 1.5 },
-            { name: "App Issues", count: 514, percentage: 1.5 }
+            // Main Categories
+            { name: "Subscription Cancellation", count: 5867, percentage: 17.2, category: "main", color: "#FF6B6B" },
+            { name: "Refund Request", count: 2836, percentage: 8.3, category: "main", color: "#4ECDC4" },
+            { name: "Subscription + Refund", count: 1556, percentage: 4.6, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Cancellation + Refund", count: 1448, percentage: 4.2, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Refund Request", count: 705, percentage: 2.1, category: "sub", color: "#FF8E8E" },
+            { name: "Positive Feedback", count: 591, percentage: 1.7, category: "main", color: "#96CEB4" },
+            { name: "Subscription refund request", count: 580, percentage: 1.7, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Cancellation Request", count: 525, percentage: 1.5, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription + Refund Request", count: 491, percentage: 1.4, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Cancellation + Refund Request", count: 448, percentage: 1.3, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Access Issue", count: 290, percentage: 0.9, category: "main", color: "#45B7D1" },
+            { name: "Subscription charge dispute", count: 249, percentage: 0.7, category: "sub", color: "#67C7F1" },
+            { name: "Password Reset Assistance", count: 244, percentage: 0.7, category: "main", color: "#FFEEAD" },
+            { name: "Subscription Cancellation Confirmation", count: 219, percentage: 0.6, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Activation Issue", count: 183, percentage: 0.5, category: "sub", color: "#67C7F1" },
+            { name: "Account Cancellation", count: 172, percentage: 0.5, category: "main", color: "#D4A5A5" },
+            { name: "Refund Status Inquiry", count: 158, percentage: 0.5, category: "sub", color: "#6EDDDC" },
+            { name: "Invoice Request", count: 137, percentage: 0.4, category: "main", color: "#9B89B3" },
+            { name: "Account Access Assistance", count: 137, percentage: 0.4, category: "main", color: "#FFB6B9" },
+            { name: "Unauthorized charge refund", count: 132, percentage: 0.4, category: "sub", color: "#6EDDDC" },
+            { name: "Subscription Cancellation Assistance", count: 122, percentage: 0.4, category: "sub", color: "#FF8E8E" },
+            { name: "Unsubscribe from emails", count: 103, percentage: 0.3, category: "main", color: "#A8E6CF" },
+            { name: "Account Assistance", count: 103, percentage: 0.3, category: "main", color: "#DCEDC1" },
+            { name: "Account Cancellation Request", count: 101, percentage: 0.3, category: "sub", color: "#E4B5B5" },
+            { name: "Initial Inquiry", count: 96, percentage: 0.3, category: "main", color: "#C9A9DD" },
+            { name: "Out of Office Notification", count: 90, percentage: 0.3, category: "main", color: "#FFD93D" },
+            { name: "Unauthorized charge dispute", count: 89, percentage: 0.3, category: "sub", color: "#6EDDDC" },
+            { name: "Account Deletion Request", count: 86, percentage: 0.3, category: "main", color: "#E4B5B5" },
+            { name: "Premium Access Activation", count: 84, percentage: 0.2, category: "main", color: "#67C7F1" },
+            { name: "Membership Cancellation", count: 84, percentage: 0.2, category: "sub", color: "#E4B5B5" },
+            { name: "Account Access Issues", count: 83, percentage: 0.2, category: "sub", color: "#FFC6C9" },
+            { name: "Refund + Subscription Cancellation", count: 82, percentage: 0.2, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription + Refund Inquiry", count: 80, percentage: 0.2, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription Cancellation Inquiry", count: 78, percentage: 0.2, category: "sub", color: "#FF8E8E" },
+            { name: "Account Information Inquiry", count: 78, percentage: 0.2, category: "main", color: "#FFC6C9" },
+            { name: "General Inquiry", count: 72, percentage: 0.2, category: "main", color: "#C9A9DD" },
+            { name: "Account Inquiry", count: 72, percentage: 0.2, category: "main", color: "#FFC6C9" },
+            { name: "English Language Learning", count: 67, percentage: 0.2, category: "main", color: "#B6E4D4" },
+            { name: "Refund Confirmation", count: 67, percentage: 0.2, category: "sub", color: "#6EDDDC" },
+            { name: "Subscription Plan Change", count: 64, percentage: 0.2, category: "main", color: "#67C7F1" },
+            { name: "Subscription Access Issues", count: 62, percentage: 0.2, category: "sub", color: "#67C7F1" },
+            { name: "Subscription Payment Issue", count: 61, percentage: 0.2, category: "main", color: "#FFD93D" },
+            { name: "Subscription Pricing Inquiry", count: 60, percentage: 0.2, category: "main", color: "#FFD93D" },
+            { name: "Account Access Issue", count: 60, percentage: 0.2, category: "sub", color: "#FFC6C9" },
+            { name: "Refund Request + Subscription Cancellation", count: 59, percentage: 0.2, category: "sub", color: "#FF8E8E" },
+            { name: "Subscription cancellation refund", count: 57, percentage: 0.2, category: "sub", color: "#FF8E8E" },
+            { name: "Refund Request for Unauthorized Charge", count: 54, percentage: 0.2, category: "sub", color: "#6EDDDC" },
+            { name: "Unauthorized charge inquiry", count: 51, percentage: 0.1, category: "sub", color: "#6EDDDC" },
+            { name: "Subscription Cancellation + Refund Inquiry", count: 50, percentage: 0.1, category: "sub", color: "#FF8E8E" }
         ];
         const container = document.getElementById('supportBubbleChart');
         const containerWidth = container.clientWidth;
@@ -1222,17 +1266,26 @@
         });
 
         const maxCount = Math.max(...data.map(d => d.count));
-        const minRadius = 40;
-        const maxRadius = 120;
-        const radiusScale = count => (count / maxCount) * (maxRadius - minRadius) + minRadius;
+        const minRadius = 25;
+        const maxRadius = 100;
+        const radiusScale = count => {
+            // Use logarithmic scale for better distribution
+            const logCount = Math.log(count);
+            const logMax = Math.log(maxCount);
+            return (logCount / logMax) * (maxRadius - minRadius) + minRadius;
+        };
 
-        const colors = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
-            '#FFEEAD', '#D4A5A5', '#9B89B3', '#FFB6B9',
-            '#A8E6CF', '#DCEDC1'
-        ];
-
-        const generateColor = (index) => {
+        // Enhanced color scheme for main and sub categories
+        const generateColor = (item, index) => {
+            if (item.color) {
+                return item.color;
+            }
+            const colors = [
+                '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
+                '#FFEEAD', '#D4A5A5', '#9B89B3', '#FFB6B9',
+                '#A8E6CF', '#DCEDC1', '#FFD93D', '#C9A9DD',
+                '#B6E4D4', '#E4B5B5', '#67C7F1', '#6EDDDC'
+            ];
             return colors[index % colors.length];
         };
 
@@ -1252,22 +1305,29 @@
 
         const bubbles = data.map((item, index) => {
             const radius = radiusScale(item.count);
-            return Bodies.circle(
-                containerWidth / 2 + (Math.random() - 0.5) * 100,
-                containerHeight / 2 + (Math.random() - 0.5) * 100,
-                radius,
-                {
-                    restitution: 0.5,
-                    friction: 0.2,
-                    density: 0.0008,
-                    frictionAir: 0.03,
-                    render: {
-                        fillStyle: colors[index],
-                        strokeStyle: '#ffffff',
-                        lineWidth: 2
-                    }
+            const color = generateColor(item, index);
+            
+            // Different positioning strategy for main vs sub categories
+            let x, y;
+            if (item.category === 'main') {
+                x = containerWidth / 2 + (Math.random() - 0.5) * 200;
+                y = containerHeight / 2 + (Math.random() - 0.5) * 200;
+            } else {
+                x = containerWidth / 2 + (Math.random() - 0.5) * 400;
+                y = containerHeight / 2 + (Math.random() - 0.5) * 400;
+            }
+            
+            return Bodies.circle(x, y, radius, {
+                restitution: 0.4,
+                friction: 0.3,
+                density: item.category === 'main' ? 0.001 : 0.0008,
+                frictionAir: 0.04,
+                render: {
+                    fillStyle: color,
+                    strokeStyle: item.category === 'main' ? '#ffffff' : '#f0f0f0',
+                    lineWidth: item.category === 'main' ? 3 : 1.5
                 }
-            );
+            });
         });
 
         const mouse = Mouse.create(render.canvas);
@@ -1319,25 +1379,57 @@
 
         Matter.Events.on(render, 'afterRender', () => {
             bubbles.forEach((bubble, index) => {
-                const lines = data[index].name.split(' ');
-                const lineHeight = 14;
+                const item = data[index];
+                const radius = bubble.circleRadius;
+                
+                // Adaptive text size based on bubble size
+                const fontSize = Math.max(9, Math.min(14, radius / 5));
+                const percentageFontSize = Math.max(8, Math.min(12, radius / 6));
+                
+                // Split text into lines, truncate if necessary
+                let lines = item.name.split(' ');
+                const maxLines = Math.floor(radius / 10);
+                if (lines.length > maxLines) {
+                    lines = lines.slice(0, maxLines - 1);
+                    lines.push('...');
+                }
+                
+                const lineHeight = fontSize + 2;
                 const startY = bubble.position.y - (lines.length - 1) * lineHeight / 2;
                 
-                ctx.font = '400 11px Inter';
+                ctx.font = `400 ${fontSize}px Inter`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#ffffff';
+                ctx.fillStyle = item.category === 'main' ? '#ffffff' : '#333333';
                 
+                // Draw category name
                 lines.forEach((line, lineIndex) => {
-                    ctx.fillText(line, bubble.position.x, startY + lineIndex * lineHeight - 5);
+                    // Truncate long lines
+                    const maxWidth = radius * 1.6;
+                    let displayLine = line;
+                    while (ctx.measureText(displayLine).width > maxWidth && displayLine.length > 3) {
+                        displayLine = displayLine.slice(0, -1);
+                    }
+                    ctx.fillText(displayLine, bubble.position.x, startY + lineIndex * lineHeight - 3);
                 });
                 
-                ctx.font = '600 13px Inter';
+                // Draw percentage
+                ctx.font = `600 ${percentageFontSize}px Inter`;
                 ctx.fillText(
-                    `${data[index].percentage}%`,
+                    `${item.percentage}%`,
                     bubble.position.x,
                     bubble.position.y + lines.length * lineHeight / 2 + 5
                 );
+                
+                // Draw count for larger bubbles
+                if (radius > 40) {
+                    ctx.font = `300 ${Math.max(8, percentageFontSize - 2)}px Inter`;
+                    ctx.fillText(
+                        `(${item.count})`,
+                        bubble.position.x,
+                        bubble.position.y + lines.length * lineHeight / 2 + 15
+                    );
+                }
             });
         });
 
@@ -1351,6 +1443,14 @@
 
             if (savedEmail && savedPassword === 'promova') {
                 loginOverlay.style.display = 'none';
+                
+                // Update Zonka Feedback variables with saved user email
+                if (typeof _zf === 'function') {
+                    _zf('variables', {
+                        contact_name: savedEmail,
+                        contact_email: savedEmail,
+                    });
+                }
             }
 
             loginForm.onsubmit = (event) => {
@@ -1363,6 +1463,14 @@
                     // Save credentials to localStorage
                     localStorage.setItem('userEmail', email);
                     localStorage.setItem('userPassword', password);
+                    
+                    // Update Zonka Feedback variables with user email
+                    if (typeof _zf === 'function') {
+                        _zf('variables', {
+                            contact_name: email,
+                            contact_email: email,
+                        });
+                    }
                     
                     // Hide overlay after a short delay
                     setTimeout(() => {
