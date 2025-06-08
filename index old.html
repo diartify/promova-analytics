@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocofood Support Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+          :root {
+            --background: #ffffff;
+            --foreground: #111111;
+            --muted: #666666;
+            --border: #eaeaea;
+            --accent: #000000;
+            --hover: #fafafa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            margin: 0;
+        }
+
+        #supportBubbleChart {
+            width: 100%;
+            height: 600px;
+            background: var(--background);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #supportBubbleChart canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .glass-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .glass-card:hover {
+            background: var(--hover);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--foreground);
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            color: var(--foreground);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--foreground);
+        }
+
+        .stat-description {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .trend-indicator {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        .insights-section {
+            margin-top: 3rem;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .time-range {
+            font-size: 0.875rem;
+            color: var(--muted);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .header-content {
+            max-width: 800px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .quick-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .priority-high {
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .stat-breakdown {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .insight-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .insight-filters button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--background);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .insight-filters button.active {
+            background: var(--foreground);
+            color: var(--background);
+        }
+
+        .insight-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .priority-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .priority-badge.high {
+            background: #FFE8E8;
+            color: #FF6B6B;
+        }
+
+        .insight-list {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .insight-list li {
+            margin-bottom: 0.5rem;
+            color: var(--muted);
+        }
+
+        .insight-metrics {
+            display: flex;
+            gap: 2rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 768px) {
+            .header-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .insight-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .trend-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background: #FF6B6B;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            position: absolute;
+            right: 0;
+            top: -1.5rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .breakdown-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+        .breakdown-bar .bar {
+            height: 100%;
+            background: #FF6B6B;
+            border-radius: 3px;
+            opacity: 0.7;
+        }
+
+        .breakdown-bar span {
+            position: absolute;
+            right: 0;
+            top: -1.25rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .insight-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+        }
+
+        .insight-stats {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-pill {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: var(--hover);
+            border-radius: 6px;
+        }
+
+        .pill-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .pill-value {
+            font-weight: 500;
+        }
+
+        .finding-list, .action-list {
+            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .finding-list li, .action-list li {
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .trend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .trend-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .trend-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+
+        .action-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--hover);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .action-priority {
+            width: 4px;
+            border-radius: 2px;
+        }
+
+        .action-priority.high {
+            background: #FF6B6B;
+        }
+
+        .action-priority.medium {
+            background: #FFB6B9;
+        }
+
+        .action-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .trending-up {
+            color: #2E7D32;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--foreground);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        #loginForm {
+            width: 100%;
+        }
+
+        #loginForm button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #loginForm button:hover {
+            background: #333;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+    <div id="loginOverlay">
+        <div class="login-modal">
+            <div class="login-header">
+                <img src="https://i.imghippo.com/files/KPUj8349wDk.png" alt="Chocofood logo" style="height: 24px;">
+                <h2>Welcome to Chocofood Support Intelligence</h2>
+            </div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <nav class="nav">
+            <div class="logo">
+                <span class="logo-icon">🌐</span>
+                Chocofood Support Intelligence
+            </div>
+            <div class="nav-right">
+                <div class="time-range">All Time</div>
+                <a href="https://chocofood.kz">
+                    <img src="https://i.imghippo.com/files/KPUj8349wDk.png" alt="Chocofood logo" style="height: 20px; opacity: 0.6;">
+                </a>
+            </div>
+        </nav>
+
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">Chocofood Support Dashboard</h1>
+                <p class="subtitle">
+                    AI-powered analysis of support interactions for Chocofood. Identifying patterns 
+                    and automating solutions for delivery platform operations.
+                </p>
+                <div class="header-stats">
+                    <div class="quick-stat">
+                        <span class="stat-number">Intercom</span>
+                        <span class="stat-label">Ticketing System</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-number">8,947</span>
+                        <span class="stat-label">Courier Tickets Analyzed</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-number">30</span>
+                        <span class="stat-label">Last 30 Days</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="supportBubbleChart"></div>
+
+        <div class="stats-grid">
+            <!-- Order Reassignment/Removal -->
+            <div class="glass-card priority-high">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Reassignment/Removal</div>
+                        <div class="stat-value">1,185 Cases</div>
+                    </div>
+                    <div class="trend-badge positive">Most Impactful</div>
+                </div>
+                <div class="stat-description">Order reassignment and removal issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 13.24%"></div>
+                    <span class="progress-text">13.24% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Schedule/Slot Management -->
+            <div class="glass-card priority-high">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Schedule/Slot Management</div>
+                        <div class="stat-value">1,124 Cases</div>
+                    </div>
+                    <div class="trend-badge positive">High Impact</div>
+                </div>
+                <div class="stat-description">Managing delivery slots and courier schedules</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 12.56%"></div>
+                    <span class="progress-text">12.56% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Order Status and Updates -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Status and Updates</div>
+                        <div class="stat-value">892 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Handling order status updates and tracking</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 9.97%"></div>
+                    <span class="progress-text">9.97% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Account Management -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Account Management</div>
+                        <div class="stat-value">746 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Managing courier account-related issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 8.34%"></div>
+                    <span class="progress-text">8.34% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Order Cancellation -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Cancellation</div>
+                        <div class="stat-value">642 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Processing and managing order cancellations</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 7.18%"></div>
+                    <span class="progress-text">7.18% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Customer Contact Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Customer Contact Issues</div>
+                        <div class="stat-value">584 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Customer contact and communication issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 6.53%"></div>
+                    <span class="progress-text">6.53% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Order Delay Management -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Delay Management</div>
+                        <div class="stat-value">512 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Managing and resolving delivery delays</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 5.72%"></div>
+                    <span class="progress-text">5.72% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Payment and Compensation -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Payment and Compensation</div>
+                        <div class="stat-value">465 Cases</div>
+                    </div>
+                    <div class="trend-badge">Medium Impact</div>
+                </div>
+                <div class="stat-description">Handling payment and compensation issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 5.20%"></div>
+                    <span class="progress-text">5.20% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Delivery Address Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Delivery Address Issues</div>
+                        <div class="stat-value">432 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Resolving delivery address-related problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 4.83%"></div>
+                    <span class="progress-text">4.83% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Activity Status Management -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Activity Status Management</div>
+                        <div class="stat-value">387 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Managing courier activity statuses</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 4.33%"></div>
+                    <span class="progress-text">4.33% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Wait Time Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Wait Time Issues</div>
+                        <div class="stat-value">328 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Managing courier wait time concerns</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 3.67%"></div>
+                    <span class="progress-text">3.67% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Order Assignment -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Assignment</div>
+                        <div class="stat-value">279 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Managing order assignment processes</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 3.12%"></div>
+                    <span class="progress-text">3.12% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Distance and Navigation -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Distance and Navigation</div>
+                        <div class="stat-value">276 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Resolving navigation and distance-related issues</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 3.08%"></div>
+                    <span class="progress-text">3.08% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Vehicle Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Vehicle Issues</div>
+                        <div class="stat-value">276 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Handling courier vehicle-related problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 3.08%"></div>
+                    <span class="progress-text">3.08% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Order Completion -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Order Completion</div>
+                        <div class="stat-value">271 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Managing order completion processes</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 3.03%"></div>
+                    <span class="progress-text">3.03% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Language and Communication -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Language and Communication</div>
+                        <div class="stat-value">213 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Addressing language and communication barriers</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 2.38%"></div>
+                    <span class="progress-text">2.38% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Technical Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Technical Issues</div>
+                        <div class="stat-value">179 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Resolving app and technical-related problems</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 2.00%"></div>
+                    <span class="progress-text">2.00% of total volume</span>
+                </div>
+            </div>
+
+            <!-- Weight and Size Issues -->
+            <div class="glass-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Weight and Size Issues</div>
+                        <div class="stat-value">156 Cases</div>
+                    </div>
+                    <div class="trend-badge">Low Impact</div>
+                </div>
+                <div class="stat-description">Managing order weight and size concerns</div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 1.74%"></div>
+                    <span class="progress-text">1.74% of total volume</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const data = [
+            { name: "Order Reassignment/Removal", count: 1185, percentage: 13.24 },
+            { name: "Schedule/Slot Management", count: 1124, percentage: 12.56 },
+            { name: "Order Status and Updates", count: 892, percentage: 9.97 },
+            { name: "Account Management", count: 746, percentage: 8.34 },
+            { name: "Order Cancellation", count: 642, percentage: 7.18 },
+            { name: "Customer Contact Issues", count: 584, percentage: 6.53 },
+            { name: "Order Delay Management", count: 512, percentage: 5.72 },
+            { name: "Payment and Compensation", count: 465, percentage: 5.20 },
+            { name: "Delivery Address Issues", count: 432, percentage: 4.83 },
+            { name: "Activity Status Management", count: 387, percentage: 4.33 },
+            { name: "Wait Time Issues", count: 328, percentage: 3.67 },
+            { name: "Order Assignment", count: 279, percentage: 3.12 },
+            { name: "Distance and Navigation", count: 276, percentage: 3.08 },
+            { name: "Vehicle Issues", count: 276, percentage: 3.08 },
+            { name: "Order Completion", count: 271, percentage: 3.03 },
+            { name: "Language and Communication", count: 213, percentage: 2.38 },
+            { name: "Technical Issues", count: 179, percentage: 2.00 },
+            { name: "Weight and Size Issues", count: 156, percentage: 1.74 }
+        ];
+        const container = document.getElementById('supportBubbleChart');
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        const Engine = Matter.Engine,
+              Render = Matter.Render,
+              Runner = Matter.Runner,
+              Bodies = Matter.Bodies,
+              Composite = Matter.Composite,
+              Mouse = Matter.Mouse,
+              Body = Matter.Body,
+              MouseConstraint = Matter.MouseConstraint;
+
+        const engine = Engine.create({
+            constraintIterations: 3
+        });
+
+        engine.timing.timeScale = 0.7;
+
+        const render = Render.create({
+            element: container,
+            engine: engine,
+            options: {
+                width: containerWidth,
+                height: containerHeight,
+                wireframes: false,
+                background: 'transparent',
+                pixelRatio: window.devicePixelRatio
+            }
+        });
+
+        const maxCount = Math.max(...data.map(d => d.count));
+        const minRadius = 40;
+        const maxRadius = 90;
+        const radiusScale = count => (count / maxCount) * (maxRadius - minRadius) + minRadius;
+
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
+            '#FFEEAD', '#D4A5A5', '#9B89B3', '#FFB6B9',
+            '#A8E6CF', '#DCEDC1', '#FFD93D', '#FF8B94'
+        ];
+
+        const generateColor = (index) => {
+            return colors[index % colors.length];
+        };
+
+        const wallThickness = 50;
+        const wallOptions = {
+            isStatic: true,
+            render: { fillStyle: 'transparent' },
+            restitution: 0.3
+        };
+
+        const walls = [
+            Bodies.rectangle(containerWidth/2, -wallThickness/2, containerWidth + 100, wallThickness, wallOptions),
+            Bodies.rectangle(containerWidth/2, containerHeight + wallThickness/2, containerWidth + 100, wallThickness, wallOptions),
+            Bodies.rectangle(-wallThickness/2, containerHeight/2, wallThickness, containerHeight + 100, wallOptions),
+            Bodies.rectangle(containerWidth + wallThickness/2, containerHeight/2, wallThickness, containerHeight + 100, wallOptions)
+        ];
+
+        const bubbles = data.map((item, index) => {
+            const radius = radiusScale(item.count);
+            return Bodies.circle(
+                containerWidth / 2 + (Math.random() - 0.5) * 100,
+                containerHeight / 2 + (Math.random() - 0.5) * 100,
+                radius,
+                {
+                    restitution: 0.5,
+                    friction: 0.2,
+                    density: 0.0008,
+                    frictionAir: 0.03,
+                    render: {
+                        fillStyle: colors[index],
+                        strokeStyle: '#ffffff',
+                        lineWidth: 2
+                    }
+                }
+            );
+        });
+
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.1,
+                damping: 0.2,
+                render: { visible: false }
+            }
+        });
+
+        Matter.Events.on(engine, 'afterUpdate', () => {
+            bubbles.forEach(bubble => {
+                const maxVelocity = 15;
+                const velocity = bubble.velocity;
+                const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+                
+                if (speed > maxVelocity) {
+                    const scale = maxVelocity / speed;
+                    Body.setVelocity(bubble, {
+                        x: velocity.x * scale,
+                        y: velocity.y * scale
+                    });
+                }
+            });
+        });
+
+        Composite.add(engine.world, [...bubbles, ...walls, mouseConstraint]);
+        engine.world.gravity.y = 0;
+
+        Matter.Events.on(engine, 'beforeUpdate', () => {
+            bubbles.forEach(bubble => {
+                const centerAttraction = {
+                    x: (containerWidth/2 - bubble.position.x) * 0.00002,
+                    y: (containerHeight/2 - bubble.position.y) * 0.00002
+                };
+                
+                Matter.Body.applyForce(bubble, bubble.position, centerAttraction);
+            });
+        });
+
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        const canvas = render.canvas;
+        const ctx = canvas.getContext('2d');
+
+        Matter.Events.on(render, 'afterRender', () => {
+            bubbles.forEach((bubble, index) => {
+                ctx.font = '400 12px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(data[index].name, bubble.position.x, bubble.position.y - 6);
+                
+                ctx.font = '600 14px Inter';
+                ctx.fillText(
+                    `${data[index].percentage}%`,
+                    bubble.position.x,
+                    bubble.position.y + 10
+                );
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginOverlay = document.getElementById('loginOverlay');
+            const loginForm = document.getElementById('loginForm');
+
+            // Check if we have saved credentials
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedPassword = localStorage.getItem('userPassword');
+
+            if (savedEmail && savedPassword === 'chocofood') {
+                // Auto-login with saved credentials
+                fetch('https://run.relay.app/api/v1/playbook/cm41s6wja00tw0pkue8x55kcd/trigger/AYYU-qLFNuZM6gjmElFBpA', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: savedEmail,
+                        domain: 'chocofood.kz'
+                    })
+                });
+                loginOverlay.style.display = 'none';
+            }
+
+            loginForm.onsubmit = (event) => {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // Check if password matches
+                if (password === 'chocofood') {
+                    // Save credentials to localStorage
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPassword', password);
+
+                    // Make POST request
+                    fetch('https://run.relay.app/api/v1/playbook/cm41s6wja00tw0pkue8x55kcd/trigger/AYYU-qLFNuZM6gjmElFBpA', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            domain: 'chocofood.kz'
+                        })
+                    });
+                    
+                    // Hide overlay after a short delay
+                    setTimeout(() => {
+                        loginOverlay.style.display = 'none';
+                    }, 500);
+                } else {
+                    alert('Invalid password');
+                }
+            };
+        });
+    </script>
+</body>
+</html>
